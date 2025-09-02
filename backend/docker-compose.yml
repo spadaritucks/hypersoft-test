@@ -38,14 +38,23 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: hypesoft-api
-    ports:
-      - "5000:8080"
     environment:
       ConnectionStrings__MongoDB: mongodb://mongodb:27017
       Keycloak__Authority: http://keycloak:8080/realms/hypesoft
     depends_on:
       - mongodb
       - keycloak
+
+  nginx:
+    image: nginx:alpine
+    container_name: hypesoft-nginx
+    ports:
+      - "80:80"
+      - "5000:5000"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
 
 volumes:
   mongodb_data:
