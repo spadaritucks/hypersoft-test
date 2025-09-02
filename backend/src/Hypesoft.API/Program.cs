@@ -71,11 +71,14 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Rate Limiting
 builder.Services.AddRateLimiter(options =>
 {
-    options.AddFixedWindowLimiter("Api", opt =>
-    {
-        opt.Window = TimeSpan.FromMinutes(1);
-        opt.PermitLimit = 100;
-    });
+    options.AddPolicy("Api", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                Window = TimeSpan.FromMinutes(1),
+                PermitLimit = 100
+            }));
 });
 
 // JWT Authentication
@@ -115,24 +118,24 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure pipeline
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hypesoft API v1");
+    c.RoutePrefix = "swagger";
+});
+
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseResponseCompression();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseSerilogRequestLogging();
 app.UseRateLimiter();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers().RequireRateLimiting("Api");
+app.MapControllers();
 app.MapHealthChecks("/health");
 
 app.Run();
