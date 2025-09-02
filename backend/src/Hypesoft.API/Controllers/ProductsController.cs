@@ -70,6 +70,14 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
+    [HttpPatch("{id}/stock")]
+    public async Task<ActionResult<ProductDto>> UpdateStock(string id, [FromBody] int newQuantity)
+    {
+        var command = new UpdateStockCommand(id, newQuantity);
+        var product = await _mediator.Send(command);
+        return Ok(product);
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {

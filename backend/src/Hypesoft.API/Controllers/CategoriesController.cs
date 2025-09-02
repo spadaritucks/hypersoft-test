@@ -1,3 +1,4 @@
+using Hypesoft.Application.Commands;
 using Hypesoft.Application.DTOs;
 using Hypesoft.Application.Queries;
 using MediatR;
@@ -30,5 +31,20 @@ public class CategoriesController : ControllerBase
     {
         var category = await _mediator.Send(new GetCategoryByIdQuery(id));
         return category != null ? Ok(category) : NotFound();
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<CategoryDto>> Create(CreateCategoryDto dto)
+    {
+        var command = new CreateCategoryCommand(dto.Name);
+        var category = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetById), new { id = category.Id }, category);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        await _mediator.Send(new DeleteCategoryCommand(id));
+        return NoContent();
     }
 }
