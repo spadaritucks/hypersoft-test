@@ -42,6 +42,60 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, I
     }
 }
 
+public class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery, IEnumerable<ProductDto>>
+{
+    private readonly IProductRepository _repository;
+    private readonly IMapper _mapper;
+
+    public SearchProductsQueryHandler(IProductRepository repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
+
+    public async Task<IEnumerable<ProductDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
+    {
+        var products = await _repository.SearchByNameAsync(request.Name);
+        return _mapper.Map<IEnumerable<ProductDto>>(products);
+    }
+}
+
+public class GetProductsByCategoryQueryHandler : IRequestHandler<GetProductsByCategoryQuery, IEnumerable<ProductDto>>
+{
+    private readonly IProductRepository _repository;
+    private readonly IMapper _mapper;
+
+    public GetProductsByCategoryQueryHandler(IProductRepository repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
+
+    public async Task<IEnumerable<ProductDto>> Handle(GetProductsByCategoryQuery request, CancellationToken cancellationToken)
+    {
+        var products = await _repository.GetByCategoryAsync(request.CategoryId);
+        return _mapper.Map<IEnumerable<ProductDto>>(products);
+    }
+}
+
+public class GetLowStockProductsQueryHandler : IRequestHandler<GetLowStockProductsQuery, IEnumerable<ProductDto>>
+{
+    private readonly IProductRepository _repository;
+    private readonly IMapper _mapper;
+
+    public GetLowStockProductsQueryHandler(IProductRepository repository, IMapper mapper)
+    {
+        _repository = repository;
+        _mapper = mapper;
+    }
+
+    public async Task<IEnumerable<ProductDto>> Handle(GetLowStockProductsQuery request, CancellationToken cancellationToken)
+    {
+        var products = await _repository.GetLowStockAsync();
+        return _mapper.Map<IEnumerable<ProductDto>>(products);
+    }
+}
+
 public class GetDashboardQueryHandler : IRequestHandler<GetDashboardQuery, DashboardDto>
 {
     private readonly IProductRepository _productRepository;
