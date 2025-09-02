@@ -60,7 +60,7 @@ services:
     container_name: hypesoft-nginx
     ports:
       - "80:80"
-      - "5000:5000"
+      - "6000:6000"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
