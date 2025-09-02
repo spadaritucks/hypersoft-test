@@ -26,6 +26,27 @@ public class ProductsController : ControllerBase
         return Ok(products);
     }
 
+    [HttpGet("search")]
+    public async Task<ActionResult<IEnumerable<ProductDto>>> Search([FromQuery] string name)
+    {
+        var products = await _mediator.Send(new SearchProductsQuery(name));
+        return Ok(products);
+    }
+
+    [HttpGet("category/{categoryId}")]
+    public async Task<ActionResult<IEnumerable<ProductDto>>> GetByCategory(string categoryId)
+    {
+        var products = await _mediator.Send(new GetProductsByCategoryQuery(categoryId));
+        return Ok(products);
+    }
+
+    [HttpGet("low-stock")]
+    public async Task<ActionResult<IEnumerable<ProductDto>>> GetLowStock()
+    {
+        var products = await _mediator.Send(new GetLowStockProductsQuery());
+        return Ok(products);
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDto>> GetById(string id)
     {
