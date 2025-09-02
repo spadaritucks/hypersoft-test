@@ -2,6 +2,7 @@ using Hypesoft.Application.Mappings;
 using Hypesoft.Domain.Repositories;
 using Hypesoft.Infrastructure.Data;
 using Hypesoft.Infrastructure.Repositories;
+using Hypesoft.API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -78,6 +79,8 @@ builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Configure pipeline
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
