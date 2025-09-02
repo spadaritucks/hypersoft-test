@@ -4,10 +4,17 @@ using Hypesoft.Infrastructure.Data;
 using Hypesoft.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Serilog;
+using FluentValidation;
+using System.Threading.RateLimiting;
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // Add services
 builder.Services.AddControllers();
@@ -25,8 +32,21 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Hypesoft.Application.Commands.CreateProductCommand).Assembly));
 
+// FluentValidation
+builder.Services.AddValidatorsFromAssembly(typeof(Hypesoft.Application.Commands.CreateProductCommand).Assembly);
+
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("Api", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 100;
+    });
+});
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -52,6 +72,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddHealthChecks()
     .AddMongoDb(builder.Configuration.GetConnectionString("MongoDB")!);
 
+// Memory Cache
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 // Configure pipeline
@@ -61,10 +84,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
+app.UseRateLimiter();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+app.MapControllers().RequireRateLimiting("Api");
 app.MapHealthChecks("/health");
 
 app.Run();
