@@ -79,6 +79,7 @@ builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Configure pipeline
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
