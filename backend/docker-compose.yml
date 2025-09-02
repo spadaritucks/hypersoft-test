@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: hypesoft-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: HypesoftDb
+    volumes:
+      - mongodb_data:/data/db
+
+  mongo-express:
+    image: mongo-express:1.0.0
+    container_name: hypesoft-mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017
+    depends_on:
+      - mongodb
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: hypesoft-keycloak
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hypesoft-api
+    ports:
+      - "5000:8080"
+    environment:
+      ConnectionStrings__MongoDB: mongodb://mongodb:27017
+      Keycloak__Authority: http://keycloak:8080/realms/hypesoft
+    depends_on:
+      - mongodb
+      - keycloak
+
+volumes:
+  mongodb_data:
+  keycloak_data:
