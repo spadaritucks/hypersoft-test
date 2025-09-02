@@ -8,10 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using FluentValidation;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
+    .Enrich.FromLogContext()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,11 +23,37 @@ builder.Host.UseSerilog();
 // Add services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new() { Title = "Hypesoft API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new()
+    {
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+});
+
+// Response Compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+});
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Optimal;
+});
 
 // MongoDB
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMongoDB(builder.Configuration.GetConnectionString("MongoDB")!, "HypesoftDb"));
+
+// Redis
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
 
 // Repositories
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -79,8 +108,11 @@ builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // Configure pipeline
+app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<ErrorHandlingMiddleware>();
+
+app.UseResponseCompression();
 
 if (app.Environment.IsDevelopment())
 {

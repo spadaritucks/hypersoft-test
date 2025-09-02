@@ -11,6 +11,14 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  redis:
+    image: redis:7-alpine
+    container_name: hypesoft-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
   mongo-express:
     image: mongo-express:1.0.0
     container_name: hypesoft-mongo-express
@@ -40,9 +48,11 @@ services:
     container_name: hypesoft-api
     environment:
       ConnectionStrings__MongoDB: mongodb://mongodb:27017
+      ConnectionStrings__Redis: redis:6379
       Keycloak__Authority: http://keycloak:8080/realms/hypesoft
     depends_on:
       - mongodb
+      - redis
       - keycloak
 
   nginx:
@@ -58,4 +68,5 @@ services:
 
 volumes:
   mongodb_data:
+  redis_data:
   keycloak_data:
