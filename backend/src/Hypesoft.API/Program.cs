@@ -88,6 +88,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.Authority = builder.Configuration["Keycloak:Authority"];
         options.Audience = builder.Configuration["Keycloak:Audience"];
         options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Keycloak:Authority"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Keycloak:Audience"],
+            ValidateLifetime = true
+        };
     });
 
 // CORS
