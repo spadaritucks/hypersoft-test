@@ -16,17 +16,22 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product?> GetByIdAsync(string id)
     {
-        return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+        return await _context.Products
+            .Include(p => p.Category)
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<IEnumerable<Product>> GetAllAsync()
     {
-        return await _context.Products.ToListAsync();
+        return await _context.Products
+            .Include(p => p.Category)
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Product>> GetAllAsync(int page, int size)
     {
         return await _context.Products
+            .Include(p => p.Category)
             .Skip((page - 1) * size)
             .Take(size)
             .ToListAsync();
@@ -35,6 +40,7 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> SearchByNameAsync(string name)
     {
         return await _context.Products
+            .Include(p => p.Category)
             .Where(p => p.Name.Contains(name))
             .ToListAsync();
     }
@@ -42,6 +48,7 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetByCategoryAsync(string categoryId)
     {
         return await _context.Products
+            .Include(p => p.Category)
             .Where(p => p.CategoryId == categoryId)
             .ToListAsync();
     }
@@ -49,6 +56,7 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetLowStockAsync()
     {
         return await _context.Products
+            .Include(p => p.Category)
             .Where(p => p.StockQuantity < 10)
             .ToListAsync();
     }
