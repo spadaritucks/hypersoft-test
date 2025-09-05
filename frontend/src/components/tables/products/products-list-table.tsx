@@ -80,7 +80,6 @@ export function ProductsListTable() {
               <TableHead className="px-6 py-4 font-semibold">Descrição</TableHead>
               <TableHead className="px-6 py-4 font-semibold">Preço</TableHead>
               <TableHead className="px-6 py-4 font-semibold">Estoque</TableHead>
-              <TableHead className="px-6 py-4 font-semibold">Categoria</TableHead>
               <TableHead className="px-6 py-4 font-semibold">Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -90,7 +89,7 @@ export function ProductsListTable() {
               products.map((product, index) => <ProductsListTableRow key={index} product={product} />)
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Nenhum produto encontrado</TableCell>
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Nenhum produto encontrado</TableCell>
               </TableRow>
             )}
           </TableBody>

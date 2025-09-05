@@ -4,7 +4,6 @@ export type ProductsResponseDTO = {
     description: string;
     price: number;
     categoryId: string;
-    categoryName: string;
     stockQuantity: number;
     createdAt: string;
     updatedAt: string;
