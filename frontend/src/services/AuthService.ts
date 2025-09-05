@@ -3,6 +3,7 @@ import { env } from "@/env/env";
 import { AuthRequestDTO } from "@/types/auth/AuthRequestDTO";
 import { AuthResponseDTO } from "@/types/auth/AuthResponseDTO";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function AuthService(authRequestDTO: AuthRequestDTO): Promise<AuthResponseDTO> {
 
@@ -44,4 +45,13 @@ export async function AuthService(authRequestDTO: AuthRequestDTO): Promise<AuthR
     })
 
     return data;
+}
+
+export async function LogoutService(): Promise<void> {
+    const cookiesStore = await cookies();
+    
+    cookiesStore.delete("access_token");
+    cookiesStore.delete("refresh_token");
+    
+    redirect("/");
 }
