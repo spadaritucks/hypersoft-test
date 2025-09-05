@@ -11,7 +11,7 @@ import { useModal } from "@/stores/modal-context"
 import { useToast } from "@/hooks/use-toast"
 
 const CategorySchema = z.object({
-    name: z.string().min(1, "Nome é obrigatório")
+    name: z.string().min(1, "name is required")
 })
 
 type CategoryFormData = z.infer<typeof CategorySchema>

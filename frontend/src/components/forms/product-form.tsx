@@ -12,11 +12,11 @@ import { useToast } from "@/hooks/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 
 const ProductSchema = z.object({
-    name: z.string().min(1, "Nome é obrigatório"),
-    description: z.string().min(1, "Descrição é obrigatória"),
-    price: z.number().min(0.01, "Preço deve ser maior que 0"),
+    name: z.string().min(1, "name is required"),
+    description: z.string().min(1, "description is required"),
+    price: z.number().min(0.01, "price must be at least 0.01"),
     categoryId: z.string().min(1, "Category is required"),
-    stockQuantity: z.number().min(0, "Estoque não pode ser negativo")
+    stockQuantity: z.number().min(0, "stock quantity must be at least 0")
 })
 
 type ProductFormData = z.infer<typeof ProductSchema>
