@@ -6,7 +6,6 @@ public record ProductDto(
     string Description,
     decimal Price,
     string CategoryId,
-    string CategoryName,
     int StockQuantity,
     DateTime CreatedAt,
     DateTime UpdatedAt
