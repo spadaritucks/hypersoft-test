@@ -12,11 +12,13 @@ import {
 import { PaginationComponent } from "@/components/pagination/pagination-component"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { GetAllProductsService, SearchProductsService } from "@/services/ProductsService"
+import { GetAllProductsService, SearchProductsService, GetProductsByCategoryService } from "@/services/ProductsService"
+import { GetAllCategoriesService } from "@/services/CategoryService"
 import { useQuery } from "@tanstack/react-query"
 import ProductsListTableRow from "./products-list-table-row"
 import ProductForm from "@/components/forms/product-form"
 import { useModal } from "@/stores/modal-context"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import ProductTableRowSkeleton from "@/components/skeletons/product-table-row-skeleton"
 
 export function ProductsListTable() {
@@ -24,12 +26,21 @@ export function ProductsListTable() {
   const [size] = useState(10)
   const [search, setSearch] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("")
+
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => GetAllCategoriesService()
+  })
 
   const { data: products, isLoading } = useQuery({
-    queryKey: ['products-list', page, size, searchTerm],
+    queryKey: ['products-list', page, size, searchTerm, selectedCategory],
     queryFn: async () => {
       if (searchTerm) {
         return SearchProductsService(searchTerm)
+      }
+      if (selectedCategory) {
+        return GetProductsByCategoryService(selectedCategory)
       }
       return GetAllProductsService(page, size)
     }
@@ -43,6 +54,7 @@ export function ProductsListTable() {
   function handleClearSearch() {
     setSearch("")
     setSearchTerm("")
+    setSelectedCategory("")
     setPage(1)
   }
 
@@ -67,6 +79,18 @@ export function ProductsListTable() {
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           className="max-w-sm"
         />
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Filter by category" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories?.map((category, index) => (
+              <SelectItem key={index} value={category.id}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Button onClick={handleSearch}>Search</Button>
         <Button variant="outline" onClick={handleClearSearch}>Clear</Button>
       </div>
@@ -101,7 +125,7 @@ export function ProductsListTable() {
       </div>
 
 
-      {!searchTerm && (
+      {!searchTerm && !selectedCategory && (
         <div className="flex justify-center pt-4">
           <PaginationComponent
             currentPage={page}
