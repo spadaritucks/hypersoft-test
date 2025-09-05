@@ -11,14 +11,6 @@ services:
     volumes:
       - mongodb_data:/data/db
 
-  redis:
-    image: redis:7-alpine
-    container_name: hypesoft-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
   mongo-express:
     image: mongo-express:1.0.0
     container_name: hypesoft-mongo-express
