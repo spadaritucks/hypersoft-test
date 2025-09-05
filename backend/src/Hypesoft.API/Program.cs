@@ -11,7 +11,7 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 
-// Configure Serilog
+
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .Enrich.FromLogContext()
@@ -45,30 +45,25 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
     options.Level = CompressionLevel.Optimal;
 });
 
-// MongoDB
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMongoDB(builder.Configuration.GetConnectionString("MongoDB")!, "HypesoftDb"));
 
-// Redis
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
-});
 
-// Repositories
+
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-// MediatR
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Hypesoft.Application.Commands.CreateProductCommand).Assembly));
 
-// FluentValidation
+
 builder.Services.AddValidatorsFromAssembly(typeof(Hypesoft.Application.Commands.CreateProductCommand).Assembly);
 
-// AutoMapper
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// Rate Limiting
+
 builder.Services.AddRateLimiter(options =>
 {
     options.AddPolicy("Api", context =>
