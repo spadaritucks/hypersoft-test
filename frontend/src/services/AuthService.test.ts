@@ -43,6 +43,6 @@ describe('AuthService', () => {
 
     const authData = { username: 'test', password: 'wrong' }
     
-    await expect(AuthService(authData)).rejects.toThrow('Invalid credentials')
+    await expect(AuthService(authData)).rejects.toThrow('Erro ao se autenticar')
   })
 })

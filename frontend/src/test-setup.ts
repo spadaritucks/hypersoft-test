@@ -1,10 +1,10 @@
-import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 
-// Mock Next.js navigation
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: vi.fn() })
-}))
+// Mock environment variables
+process.env.NEXT_API_URL = 'http://localhost:5000/api'
+process.env.NEXT_KEYCLOCK_URL = 'http://localhost:8080'
+process.env.NEXT_KEYCLOCK_REALM = 'hypesoft'
+process.env.NEXT_KEYCLOCK_CLIENT_ID = 'hypesoft-api'
 
 // Mock Next.js cookies
 vi.mock('next/headers', () => ({
