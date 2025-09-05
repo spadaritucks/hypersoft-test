@@ -40,4 +40,5 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
         var category = await _repository.GetByIdAsync(request.Id);
         return category != null ? _mapper.Map<CategoryDto>(category) : null;
     }
+    
 }
