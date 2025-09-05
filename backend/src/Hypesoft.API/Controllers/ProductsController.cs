@@ -20,9 +20,9 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int size = 10)
     {
-        var products = await _mediator.Send(new GetAllProductsQuery());
+        var products = await _mediator.Send(new GetAllProductsQuery(page, size));
         return Ok(products);
     }
 
