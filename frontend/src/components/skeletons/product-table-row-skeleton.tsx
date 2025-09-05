@@ -17,7 +17,10 @@ export default function ProductTableRowSkeleton() {
                 <Skeleton className="h-4 w-12" />
             </TableCell>
             <TableCell className="px-6 py-4">
-                <Skeleton className="h-8 w-8 rounded" />
+                <div className="flex gap-2">
+                    <Skeleton className="h-8 w-8 rounded" />
+                    <Skeleton className="h-8 w-8 rounded" />
+                </div>
             </TableCell>
         </TableRow>
     )

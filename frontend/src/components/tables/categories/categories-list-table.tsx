@@ -15,7 +15,7 @@ import { useModal } from "@/stores/modal-context"
 import CategoryForm from "@/components/forms/category-form"
 import CategoriesListTableRow from "./categories-list-table-row"
 import CategoryTableRowSkeleton from "@/components/skeletons/category-table-row-skeleton"
-import CategoriesListTableRow from "./categories-list-table-row"
+
 
 export function CategoriesListTable() {
   const { data: categories, isLoading } = useQuery({
