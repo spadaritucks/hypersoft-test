@@ -61,27 +61,27 @@ export function ProductsListTable() {
 
       <div className="flex gap-3 p-4 bg-muted/50 rounded-lg border">
         <Input
-          placeholder="Buscar produtos..."
+          placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           className="max-w-sm"
         />
-        <Button onClick={handleSearch}>Buscar</Button>
-        <Button variant="outline" onClick={handleClearSearch}>Limpar</Button>
+        <Button onClick={handleSearch}>Search</Button>
+        <Button variant="outline" onClick={handleClearSearch}>Clear</Button>
       </div>
 
 
       <div className="rounded-lg border bg-card shadow-sm">
         <Table>
-          <TableCaption className="py-4">Lista de Produtos</TableCaption>
+          <TableCaption className="py-4">Products List</TableCaption>
           <TableHeader>
             <TableRow className="border-b">
-              <TableHead className="px-6 py-4 font-semibold">Nome</TableHead>
-              <TableHead className="px-6 py-4 font-semibold">Descrição</TableHead>
-              <TableHead className="px-6 py-4 font-semibold">Preço</TableHead>
-              <TableHead className="px-6 py-4 font-semibold">Estoque</TableHead>
-              <TableHead className="px-6 py-4 font-semibold">Ações</TableHead>
+              <TableHead className="px-6 py-4 font-semibold">Name</TableHead>
+              <TableHead className="px-6 py-4 font-semibold">Description</TableHead>
+              <TableHead className="px-6 py-4 font-semibold">Price</TableHead>
+              <TableHead className="px-6 py-4 font-semibold">Stock</TableHead>
+              <TableHead className="px-6 py-4 font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -93,7 +93,7 @@ export function ProductsListTable() {
               products.map((product, index) => <ProductsListTableRow key={index} product={product} />)
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">Nenhum produto encontrado</TableCell>
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No products found</TableCell>
               </TableRow>
             )}
           </TableBody>

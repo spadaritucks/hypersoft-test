@@ -6,6 +6,7 @@ import { DeleteCategoryService } from "@/services/CategoryService"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useModal } from "@/stores/modal-context"
+import { useToast } from "@/hooks/use-toast"
 
 interface CategoriesListTableRowProps {
   category: CategoryResponseDTO
@@ -15,6 +16,7 @@ export default function CategoriesListTableRow({ category }: CategoriesListTable
   const [isDeleting, setIsDeleting] = useState(false)
   const queryClient = useQueryClient()
   const { openModal, hideModal } = useModal()
+  const { toast } = useToast()
 
   async function handleDelete() {
     try {
@@ -24,8 +26,17 @@ export default function CategoriesListTableRow({ category }: CategoriesListTable
       queryClient.invalidateQueries({ queryKey: ['categories'] })
       queryClient.invalidateQueries({ queryKey: ['summary'] })
       hideModal()
+      toast({
+        title: "Success",
+        description: "Category deleted successfully",
+      })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      alert("Erro ao deletar categoria: " + error.message)
+      toast({
+        title: "Error",
+        description: "Failed to delete category",
+        variant: "destructive",
+      })
     } finally {
       setIsDeleting(false)
     }
@@ -33,15 +44,15 @@ export default function CategoriesListTableRow({ category }: CategoriesListTable
 
   function openDeleteModal() {
     openModal(
-      "Confirmar Exclusão",
+      "Confirm Deletion",
       <div className="space-y-4">
-        <p>Tem certeza que deseja deletar a categoria <strong>"{category.name}"</strong>?</p>
+        <p>Are you sure you want to delete the category <strong>"{category.name}"</strong>?</p>
         <div className="flex gap-2 justify-end">
           <Button variant="outline" onClick={hideModal}>
-            Cancelar
+            Cancel
           </Button>
           <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? "Deletando..." : "Deletar"}
+            Delete
           </Button>
         </div>
       </div>

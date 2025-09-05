@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useModal } from "@/stores/modal-context"
 import { Input } from "../../ui/input"
+import { useToast } from "@/hooks/use-toast"
 
 interface ProductsListTableRowProps {
     product: ProductsResponseDTO
@@ -17,6 +18,7 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
     const [isUpdatingStock, setIsUpdatingStock] = useState(false)
     const queryClient = useQueryClient()
     const { openModal, hideModal } = useModal()
+    const { toast } = useToast()
 
     async function handleDelete() {
         try {
@@ -25,8 +27,19 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
             queryClient.invalidateQueries({ queryKey: ['products-list'] })
             queryClient.invalidateQueries({ queryKey: ['summary'] })
             hideModal()
+            toast({
+                title: "Success",
+                description: "Product deleted successfully",
+            })
+
+           
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
         } catch (error: any) {
-            alert("Erro ao deletar produto: " + error.message)
+            toast({
+                title: "Error",
+                description: "Failed to delete product",
+                variant: "destructive",
+            })
         } finally {
             setIsDeleting(false)
         }
@@ -39,8 +52,17 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
             queryClient.invalidateQueries({ queryKey: ['products-list'] })
             queryClient.invalidateQueries({ queryKey: ['summary'] })
             hideModal()
-        } catch (error: any) {
-            alert("Erro ao atualizar estoque: " + error.message)
+            toast({
+                title: "Success",
+                description: "Stock updated successfully",
+            })
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+        } catch (error: unknown) {
+            toast({
+                title: "Error",
+                description: "Failed to update stock",
+                variant: "destructive",
+            })
         } finally {
             setIsUpdatingStock(false)
         }
@@ -48,15 +70,15 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
 
     function openDeleteModal() {
         openModal(
-            "Confirmar Exclusão",
+            "Confirm Deletion",
             <div className="space-y-4">
-                <p>Tem certeza que deseja deletar o produto <strong>"{product.name}"</strong>?</p>
+                <p>Are you sure you want to delete the product <strong>{product.name}</strong>?</p>
                 <div className="flex gap-2 justify-end">
                     <Button variant="outline" onClick={hideModal}>
-                        Cancelar
+                        Cancel
                     </Button>
                     <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
-                        {isDeleting ? "Deletando..." : "Deletar"}
+                        {isDeleting ? "Deleting..." : "Delete"}
                     </Button>
                 </div>
             </div>
@@ -65,13 +87,13 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
 
     function openStockModal() {
         let quantity = product.stockQuantity
-        
+
         openModal(
-            "Atualizar Estoque",
+            "Update Stock",
             <div className="space-y-4">
-                <p>Atualizar estoque do produto <strong>"{product.name}"</strong></p>
+                <p>Update stock for product <strong>{product.name}</strong>?</p>
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Nova Quantidade:</label>
+                    <label className="text-sm font-medium">New Quantity:</label>
                     <Input
                         type="number"
                         defaultValue={quantity}
@@ -81,10 +103,10 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
                 </div>
                 <div className="flex gap-2 justify-end">
                     <Button variant="outline" onClick={hideModal}>
-                        Cancelar
+                        Cancel
                     </Button>
                     <Button onClick={() => handleUpdateStock(quantity)} disabled={isUpdatingStock}>
-                        {isUpdatingStock ? "Atualizando..." : "Atualizar"}
+                        {isUpdatingStock ? "Updating..." : "Update"}
                     </Button>
                 </div>
             </div>
@@ -99,15 +121,15 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
             <TableCell className="px-6 py-4">{product.stockQuantity}</TableCell>
             <TableCell className="px-6 py-4">
                 <div className="flex gap-2">
-                    <Button 
-                        variant="outline" 
+                    <Button
+                        variant="outline"
                         size="sm"
                         onClick={openStockModal}
                     >
                         <Edit className="h-4 w-4" />
                     </Button>
-                    <Button 
-                        variant="destructive" 
+                    <Button
+                        variant="destructive"
                         size="sm"
                         onClick={openDeleteModal}
                     >
