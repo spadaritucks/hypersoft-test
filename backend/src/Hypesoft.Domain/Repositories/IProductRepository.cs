@@ -6,6 +6,7 @@ public interface IProductRepository
 {
     Task<Product?> GetByIdAsync(string id);
     Task<IEnumerable<Product>> GetAllAsync();
+    Task<IEnumerable<Product>> GetAllAsync(int page, int size);
     Task<IEnumerable<Product>> SearchByNameAsync(string name);
     Task<IEnumerable<Product>> GetByCategoryAsync(string categoryId);
     Task<IEnumerable<Product>> GetLowStockAsync();
