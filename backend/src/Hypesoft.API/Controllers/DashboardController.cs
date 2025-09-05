@@ -19,16 +19,9 @@ public class DashboardController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<DashboardDto>> Get()
+    public async Task<ActionResult<DashboardDto>> GetDashboard()
     {
         var dashboard = await _mediator.Send(new GetDashboardQuery());
         return Ok(dashboard);
-    }
-
-    [HttpGet("chart/products-by-category")]
-    public async Task<ActionResult<IEnumerable<CategoryStatsDto>>> GetProductsByCategoryChart()
-    {
-        var dashboard = await _mediator.Send(new GetDashboardQuery());
-        return Ok(dashboard.CategoryStats);
     }
 }
