@@ -40,6 +40,7 @@ export function CategoriesListTable() {
             <TableRow className="border-b">
               <TableHead className="px-6 py-4 font-semibold">Nome</TableHead>
               <TableHead className="px-6 py-4 font-semibold">Data de Criação</TableHead>
+              <TableHead className="px-6 py-4 font-semibold">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -49,7 +50,7 @@ export function CategoriesListTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={2} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
                   Nenhuma categoria encontrada
                 </TableCell>
               </TableRow>
