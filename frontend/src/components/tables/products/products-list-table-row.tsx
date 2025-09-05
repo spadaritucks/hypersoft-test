@@ -54,6 +54,7 @@ export default function ProductsListTableRow({ product }: ProductsListTableRowPr
             <TableCell className="px-6 py-4">{product.description}</TableCell>
             <TableCell className="px-6 py-4">R$ {product.price.toFixed(2)}</TableCell>
             <TableCell className="px-6 py-4">{product.stockQuantity}</TableCell>
+            <TableCell className="px-6 py-4">{product.categoryName}</TableCell>
             <TableCell className="px-6 py-4">
                 <Button 
                     variant="destructive" 
