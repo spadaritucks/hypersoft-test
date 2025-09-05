@@ -122,7 +122,7 @@ public class GetDashboardQueryHandler : IRequestHandler<GetDashboardQuery, Dashb
 
         return new DashboardDto(
             products.Count(),
-            products.Sum(p => p.Price * p.StockQuantity),
+            products.Sum(p => p.StockQuantity),
             _mapper.Map<IEnumerable<ProductDto>>(lowStockProducts),
             categoryStats
         );
