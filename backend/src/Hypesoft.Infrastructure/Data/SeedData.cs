@@ -11,9 +11,9 @@ public static class SeedData
 
         var categories = new[]
         {
-            new Category { Id = "cat1", Name = "Electronics" },
-            new Category { Id = "cat2", Name = "Clothing" },
-            new Category { Id = "cat3", Name = "Books" }
+            new Category { Id = Guid.NewGuid().ToString(), Name = "Electronics" },
+            new Category { Id = Guid.NewGuid().ToString(), Name = "Clothing" },
+            new Category { Id = Guid.NewGuid().ToString(), Name = "Books" }
         };
 
         await context.Categories.AddRangeAsync(categories);
