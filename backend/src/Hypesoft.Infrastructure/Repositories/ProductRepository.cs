@@ -24,6 +24,14 @@ public class ProductRepository : IProductRepository
         return await _context.Products.ToListAsync();
     }
 
+    public async Task<IEnumerable<Product>> GetAllAsync(int page, int size)
+    {
+        return await _context.Products
+            .Skip((page - 1) * size)
+            .Take(size)
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<Product>> SearchByNameAsync(string name)
     {
         return await _context.Products
