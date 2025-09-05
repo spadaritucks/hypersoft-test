@@ -1,5 +1,5 @@
 import { CircleAlert } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface LowStockProductCounterProps {
     lowStockProductsLength?: number;
@@ -22,12 +22,6 @@ export default function LowStockProductCounter({lowStockProductsLength} : LowSto
                     <span className="text-sm text-gray-700 mb-[1px]">products</span>
                 </div>
             </CardContent>
-            <CardFooter>
-                <div className="flex items-center justify-start gap-2">
-                    <span className="bg-green-100 text-green-600 text-sm px-2 font-bold">+5 products</span>
-                    <span className="text-gray-400 text-sm">from last month</span>
-                </div>
-            </CardFooter>
         </Card>
     )
 }

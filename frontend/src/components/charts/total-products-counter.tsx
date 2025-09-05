@@ -1,5 +1,5 @@
 import { Box } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface TotalProductsCounterProps {
     totalProducts?: number;
@@ -19,12 +19,6 @@ export default function TotalProductsCounter({totalProducts} : TotalProductsCoun
             <CardContent className="flex items-start">
                 <span className="text-3xl font-bold">{totalProducts}</span>
             </CardContent>
-            <CardFooter>
-                <div className="flex items-center justify-start gap-2">
-                    <span className="bg-green-100 text-green-600 text-sm px-2 font-bold">+5 products</span>
-                    <span className="text-gray-400 text-sm">from last month</span>
-                </div>
-            </CardFooter>
         </Card>
     )
 }
