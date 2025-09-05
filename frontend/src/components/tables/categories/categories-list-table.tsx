@@ -14,9 +14,11 @@ import { useQuery } from "@tanstack/react-query"
 import { useModal } from "@/stores/modal-context"
 import CategoryForm from "@/components/forms/category-form"
 import CategoriesListTableRow from "./categories-list-table-row"
+import CategoryTableRowSkeleton from "@/components/skeletons/category-table-row-skeleton"
+import CategoriesListTableRow from "./categories-list-table-row"
 
 export function CategoriesListTable() {
-  const { data: categories } = useQuery({
+  const { data: categories, isLoading } = useQuery({
     queryKey: ['categories-list'],
     queryFn:  async () => GetAllCategoriesService()
   })
@@ -44,7 +46,11 @@ export function CategoriesListTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories?.length ? (
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <CategoryTableRowSkeleton key={index} />
+              ))
+            ) : categories?.length ? (
               categories.map((category, index) => (
                 <CategoriesListTableRow key={index} category={category} />
               ))

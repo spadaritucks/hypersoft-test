@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query"
 import ProductsListTableRow from "./products-list-table-row"
 import ProductForm from "@/components/forms/product-form"
 import { useModal } from "@/stores/modal-context"
+import ProductTableRowSkeleton from "@/components/skeletons/product-table-row-skeleton"
 
 export function ProductsListTable() {
   const [page, setPage] = useState(1)
@@ -24,7 +25,7 @@ export function ProductsListTable() {
   const [search, setSearch] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
 
-  const { data: products } = useQuery({
+  const { data: products, isLoading } = useQuery({
     queryKey: ['products-list', page, size, searchTerm],
     queryFn: async () => {
       if (searchTerm) {
@@ -84,8 +85,11 @@ export function ProductsListTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {
-             products && products?.length ? (
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <ProductTableRowSkeleton key={index} />
+              ))
+            ) : products && products?.length ? (
               products.map((product, index) => <ProductsListTableRow key={index} product={product} />)
             ) : (
               <TableRow>
