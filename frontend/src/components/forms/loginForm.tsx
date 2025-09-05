@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AuthService } from "@/services/AuthService";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast"
 
 
 
@@ -23,6 +24,7 @@ export default function LoginForm() {
     })
 
     const router = useRouter();
+    const { toast } = useToast()
 
     async function onSubmit(data: LoginFormdata) {
 
@@ -36,7 +38,10 @@ export default function LoginForm() {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
-            alert("Erro ao fazer login " + error);
+            toast({
+                title: "Error : " +  error.message,
+                variant: "destructive",
+            })
         }
 
     }
