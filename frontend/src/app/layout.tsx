@@ -4,6 +4,7 @@ import "./globals.css";
 import { ReactQueryProvider } from "@/stores/react-query-provider";
 import { ModalProvider } from "@/stores/modal-context";
 import Modal from "@/components/modal/modal";
+import { Toaster } from "@/components/ui/toaster";
 
 
 const geistSans = localFont({
@@ -36,6 +37,7 @@ export default function RootLayout({
           <ModalProvider>
             <Modal/>
             {children}
+            <Toaster />
           </ModalProvider>
 
         </ReactQueryProvider>
